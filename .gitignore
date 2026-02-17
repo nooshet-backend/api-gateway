@@ -1,0 +1,12 @@
+.DS_Store
+.idea/
+*.iml
+.vscode/
+build/
+out/
+.gradle/
+bin/
+logs/
+*.log
+hotspot_compiler
+jitwatch.log
