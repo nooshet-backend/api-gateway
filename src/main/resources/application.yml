@@ -118,6 +118,7 @@ management:
 
 springdoc:
   swagger-ui:
+    path: /swagger-ui.html
     use-root-path-mapping: true
     doc-expansion: none
     filter: true
