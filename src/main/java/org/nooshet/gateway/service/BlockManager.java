@@ -34,15 +34,18 @@ public class BlockManager {
         }
 
         String ipBlockKey = "blocked:ip:" + clientIP;
-        return redisTemplate.hasKey(ipBlockKey);
+        return redisTemplate.hasKey(ipBlockKey)
+                .onErrorResume(e -> Mono.just(false));
     }
 
     public Mono<Long> recordFailedAttempt(String clientIP, String userEmail) {
         if (userEmail != null && !userEmail.isEmpty()) {
-            return recordFailedAttempt(userEmail, USER_BLOCK_THRESHOLD, USER_BLOCK_DURATION, "user");
+            return recordFailedAttempt(userEmail, USER_BLOCK_THRESHOLD, USER_BLOCK_DURATION, "user")
+                    .onErrorResume(e -> Mono.just(0L));
         }
 
-        return recordFailedAttempt(clientIP, IP_BLOCK_THRESHOLD, IP_BLOCK_DURATION, "ip");
+        return recordFailedAttempt(clientIP, IP_BLOCK_THRESHOLD, IP_BLOCK_DURATION, "ip")
+                .onErrorResume(e -> Mono.just(0L));
     }
 
     private Mono<Long> recordFailedAttempt(String identifier, int threshold, Duration blockDuration, String type) {

@@ -60,7 +60,11 @@ public class RateLimiter {
         return redisTemplate.execute(RATE_LIMIT_SCRIPT, Collections.singletonList(key),
                 Arrays.asList(String.valueOf(limit), String.valueOf(window)))
                 .next()
-                .defaultIfEmpty(0L);
+                .defaultIfEmpty(0L)
+                .onErrorResume(e -> {
+                    // Fail-open: if Redis is down, allow the request but log the error
+                    return Mono.just(0L);
+                });
     }
 
     private String normalizePathForRateLimit(String path) {
