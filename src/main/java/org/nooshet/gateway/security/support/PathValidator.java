@@ -7,7 +7,7 @@ public class PathValidator {
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
-    private static final List<String> PUBLIC_ENDPOINTS = List.of(
+    public static final String[] PUBLIC_ENDPOINTS = {
         "/api/v1/auth/login",
         "/api/v1/auth/register/**",
         "/api/v1/auth/verify-otp",
@@ -18,14 +18,18 @@ public class PathValidator {
         "/swagger-ui.html",
         "/actuator/**",
         "/webjars/**"
-    );
+    };
 
     private PathValidator() {
     }
 
     public static boolean isPublic(String path) {
-        return PUBLIC_ENDPOINTS.stream()
-                .anyMatch(pattern -> PATH_MATCHER.match(pattern, path));
+        for (String pattern : PUBLIC_ENDPOINTS) {
+            if (PATH_MATCHER.match(pattern, path)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean requiresAuth(String path) {
