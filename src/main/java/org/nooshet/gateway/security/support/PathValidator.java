@@ -32,7 +32,11 @@ public class PathValidator {
             path.equals("/api/v1/auth/password-reset/request") ||
             path.equals("/api/v1/auth/password-reset/verify") ||
             path.equals("/api/v1/auth/password-reset/complete") ||
-            path.equals("/api/v1/auth/refresh")) {
+            path.equals("/api/v1/auth/refresh") ||
+            path.startsWith("/api/v1/auth/register/") ||
+            path.equals("/api/v1/auth/refresh") ||
+            path.startsWith("/api/v1/auth/register/") ||
+            path.startsWith("/api/v1/auth/password-reset/")) {
             return false;
         }
         
