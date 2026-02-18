@@ -3,7 +3,7 @@ package org.nooshet.gateway.config;
 import org.nooshet.gateway.service.BlockManager;
 import org.nooshet.gateway.service.JwtProcessor;
 import org.nooshet.gateway.service.RateLimiter;
-import org.nooshet.gateway.security.support.CsrfValidator;
+
 import org.nooshet.gateway.security.support.PathValidator;
 import org.nooshet.gateway.security.support.SecurityHeaders;
 import org.nooshet.gateway.web.support.RequestUtils;
