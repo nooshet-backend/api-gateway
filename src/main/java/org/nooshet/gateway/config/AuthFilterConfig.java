@@ -93,6 +93,10 @@ public class AuthFilterConfig {
     private Mono<Void> handleTokenValidation(ServerWebExchange exchange, GatewayFilterChain chain,
                                            JwtProcessor.TokenValidationResult validation, boolean requiresAuth,
                                            String clientIP, String path, String token) {
+        // Bypass block checks for public registration and verification endpoints
+        if (!requiresAuth) {
+            return chain.filter(exchange);
+        }
         if (!validation.valid) {
             if (requiresAuth) {
                 return handleAuthFailure(exchange, clientIP, path);
