@@ -1,57 +1,44 @@
 package org.nooshet.gateway.security.support;
 
-import java.util.Set;
+import org.springframework.util.AntPathMatcher;
+import java.util.List;
 
 public class PathValidator {
 
-    private static final Set<String> CSRF_EXEMPTED_PATHS = Set.of();
+    private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
-    private static final Set<String> AUTH_REQUIRED_PATHS = Set.of();
-
-    public static boolean requiresAuthForContent(String path) {
-        return false;
-    }
+    private static final List<String> PUBLIC_ENDPOINTS = List.of(
+        "/api/v1/auth/login",
+        "/api/v1/auth/register/**",
+        "/api/v1/auth/verify-otp",
+        "/api/v1/auth/password-reset/**",
+        "/api/v1/auth/refresh",
+        "/v3/api-docs/**",
+        "/swagger-ui/**",
+        "/swagger-ui.html",
+        "/actuator/**",
+        "/webjars/**"
+    );
 
     private PathValidator() {
     }
 
-    public static boolean isCsrfExempted(String path) {
-        return CSRF_EXEMPTED_PATHS.contains(path);
+    public static boolean isPublic(String path) {
+        return PUBLIC_ENDPOINTS.stream()
+                .anyMatch(pattern -> PATH_MATCHER.match(pattern, path));
     }
 
     public static boolean requiresAuth(String path) {
-        // Registration and verification endpoints (public)
-        if (path.equals("/api/v1/auth/login") ||
-            path.equals("/api/v1/auth/register/courier") ||
-            path.equals("/api/v1/auth/register/user") ||
-            path.equals("/api/v1/auth/register/chef") ||
-            path.equals("/api/v1/auth/register/courier/complete") ||
-            path.equals("/api/v1/auth/register/user/complete") ||
-            path.equals("/api/v1/auth/register/chef/complete") ||
-            path.equals("/api/v1/auth/verify-otp") ||
-            path.equals("/api/v1/auth/password-reset/request") ||
-            path.equals("/api/v1/auth/password-reset/verify") ||
-            path.equals("/api/v1/auth/password-reset/complete") ||
-            path.equals("/api/v1/auth/refresh") ||
-            path.startsWith("/api/v1/auth/register/") ||
-            path.equals("/api/v1/auth/refresh") ||
-            path.startsWith("/api/v1/auth/register/") ||
-            path.startsWith("/api/v1/auth/password-reset/")) {
-            return false;
-        }
-        
-        return path.startsWith("/api/v1/me") ||
-               path.startsWith("/api/v1/profiles/") || 
-               path.startsWith("/api/v1/internal/") ||
-               path.startsWith("/api/v1/admin/") ||
-               AUTH_REQUIRED_PATHS.contains(path) ||
-               requiresAuthForContent(path);
-
+        return !isPublic(path);
     }
 
-    public static boolean isAdminRoute(String path) {
-        // Simple check, refine as needed based on exact admin paths
-        return path.startsWith("/api/v1/admin/");
+    // Retaining strictly for compatibility if referenced elsewhere, but usage should migrate to isPublic/requiresAuth
+    public static boolean isCsrfExempted(String path) {
+        // For simplicity and robustness, improved logic:
+        // CSRF usually optional for public GETs, but essential for state-changing.
+        // If public, we might skip CSRF or handle it. 
+        // For now, let's keep it aligning with 'public' for the register endpoints logic implicitly.
+        return false; 
     }
 
     public static boolean startsWithApiV1(String path) {
