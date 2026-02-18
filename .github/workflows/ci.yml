@@ -124,5 +124,5 @@ jobs:
           curl -k -X POST \
             -H "Authorization: Bearer ${ARGOCD_TOKEN}" \
             -H "Content-Type: application/json" \
-            http://95.111.228.89/api/v1/applications/nooshet-api-gateway-dev/sync \
+            http://95.111.228.89:32571/api/v1/applications/nooshet-api-gateway-dev/sync \
             -d '{}'
