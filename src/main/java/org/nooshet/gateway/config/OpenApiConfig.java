@@ -10,6 +10,7 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
+        // OpenAPI configuration for API Gateway
         return new OpenAPI()
                 .info(new Info()
                         .title("API Gateway")
