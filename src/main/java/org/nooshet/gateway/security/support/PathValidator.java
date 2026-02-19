@@ -20,6 +20,9 @@ public class PathValidator {
     }
 
     public static boolean requiresAuth(String path) {
+        if (path.startsWith("/api/v1/auth/register/")) {
+            return false;
+        }
         if (path.startsWith("/api/v1/goals/images/")) {
             return false;
         }
