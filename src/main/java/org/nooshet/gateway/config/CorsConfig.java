@@ -23,11 +23,13 @@ public class CorsConfig {
         // Add production/staging IP if known, mirroring fitnest pattern
         // Ensure the server IP is allowed from Swagger/UI and other clients
         allowedOrigins.add("http://158.220.127.32");
-        // Also allow common variations (with port and https) and wildcard port pattern
-        allowedOrigins.add("http://158.220.127.32:8080");
-        allowedOrigins.add("https://158.220.127.32");
         allowedOrigins.add("http://158.220.127.32:*");
+        allowedOrigins.add("https://158.220.127.32");
         allowedOrigins.add("https://158.220.127.32:*");
+        allowedOrigins.add("http://*.nooshet.local");
+        allowedOrigins.add("http://localhost:[*]");
+        allowedOrigins.add("http://127.0.0.1:[*]");
+
 
         String environment = System.getenv("SPRING_PROFILES_ACTIVE");
         if ("dev".equals(environment) || "development".equals(environment)) {
